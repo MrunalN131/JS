@@ -1,0 +1,39 @@
+import React,{Component} from 'react';
+import axios from 'axios';
+import {Card,Button} from 'react-bootstrap';
+import {Link,Route} from 'react-router-dom';
+import Menu from './Menu';
+class Reastaurant extends Component{
+    state = {
+        restaurants: []
+      }
+    
+      componentDidMount() {
+        axios.get(`http://localhost:8080/api/restaurants`)
+          .then(res => {
+            const restaurants = res.data;
+            this.setState({ restaurants });
+          })
+      }
+    
+      render() {
+        return (
+          <ul>
+            { this.state.restaurants.map(restaurants =>(
+                <Card className="card-style">
+                
+                 <Card.Body>
+                   <Card.Title id="title"> {restaurants.restId}</Card.Title>
+                   <Card.Subtitle className="mb-2 text-muted">{restaurants.restName}</Card.Subtitle>
+                   <Card.Text> {restaurants.restAddress}</Card.Text>
+                  <Link to ={`/findDish/${restaurants.restId}`}><Button variant="primary" >Open</Button></Link>
+                  
+            <Route path={axios.get(`http://localhost:8080/api/restaurants/findDish/${restaurants.restId}`)}component={Menu }></Route>
+                 </Card.Body>
+               </Card>
+            ))}
+          </ul>
+        )
+      }
+}
+export default Reastaurant;
